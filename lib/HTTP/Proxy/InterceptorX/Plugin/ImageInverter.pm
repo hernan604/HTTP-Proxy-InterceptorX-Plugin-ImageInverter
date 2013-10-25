@@ -14,7 +14,9 @@ our $VERSION = '0.01';
 
 sub invert_image {
   my ( $self, $args ) = @_; 
-  return 0 if $self->http_request->uri->as_string !~ m/(png|gif|jpg|jpeg|bmp)$/;
+  return 0 if ! defined $self->http_request 
+           or ! defined $self->http_request->uri 
+           or           $self->http_request->uri->as_string !~ m/(png|gif|jpg|jpeg|bmp)$/;
   my $req   = HTTP::Request->new( $self->http_request->method => $self->http_request->uri->as_string );
   my $res   = $self->ua->request( $req );
   my $image = GD::Image->new( $res->content );

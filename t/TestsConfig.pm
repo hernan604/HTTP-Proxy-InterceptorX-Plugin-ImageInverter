@@ -8,12 +8,12 @@ has conteudos => (
     default => sub {
         return 
         {
-            "/download.png" => {
+            "/google_logo.jpeg" => {
                 ref     => \&html_content,
                 args    => {
                     content => {
                         original => sub {
-                            my $image = read_file( file( "t","download.png" ) );
+                            my $image = read_file( file( "t","google_logo.jpeg" ) );
                             return $image;
                         }->()
                     }

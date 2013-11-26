@@ -32,16 +32,16 @@ my $ua_proxy = HTTP::Tiny->new( proxy => "http://127.0.0.1:$proxy_port" );
 
 
 #  NORMAL REQUEST (WITHOUT PROXY)
-my $res            = $ua->get( $server->root . "/download.png");
-my $content_wanted = $tests_config->conteudos->{ '/download.png' }->{args}->{ content }->{ original };
+my $res            = $ua->get( $server->root . "/google_logo.jpeg");
+my $content_wanted = $tests_config->conteudos->{ '/google_logo.jpeg' }->{args}->{ content }->{ original };
 ok( $res->{ content } eq $content_wanted , "Content is fine" );
 #ok( $res->{ content } =~ /javascript/gi , "found javascript in the original string" );
 
 #  REQUEST WITH PROXY (CONTENT WILL BE MODIFIED)
-my $res_proxy      = $ua_proxy->get( $server->root . "/download.png");
+my $res_proxy      = $ua_proxy->get( $server->root . "/google_logo.jpeg");
 #ok( $res_proxy->{ content } =~ /perl/ig , "found perl in the modified response" );
 #ok( $res_proxy->{ content } !~ /javascript/ig , "did not find javascript in the modified response" );
-my $image_original = read_file( file( qw/t download.png/ ) );
+my $image_original = read_file( file( qw/t google_logo.jpeg/ ) );
    $image_original = GD::Image->new( $image_original )->copyRotate180();
    $image_original = $image_original;
 

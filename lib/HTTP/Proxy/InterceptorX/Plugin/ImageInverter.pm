@@ -12,26 +12,24 @@ use Data::Printer;
 use 5.008_005;
 our $VERSION = '0.01';
 
-sub invert_image {
+sub ImageInverter {
   my ( $self, $args ) = @_; 
   return 0 if ! defined $self->http_request 
            or ! defined $self->http_request->uri 
-           or           $self->http_request->uri->as_string !~ m/(png|gif|jpg|jpeg|bmp)$/;
+           or           $self->http_request->uri->path !~ m/(png|gif|jpg|jpeg|bmp)$/;
   my $req   = HTTP::Request->new( $self->http_request->method => $self->http_request->uri->as_string );
   my $res   = $self->ua->request( $req );
   my $image = GD::Image->new( $res->content );
   return 0 if ! defined $image;
   $image    = $image->copyRotate180();
-  $self->content( $image->gif() );
+  $self->override_content( $image->gif() );
   return 0;
 }
 
 after 'BUILD' => sub {
     my ( $self ) = @_; 
-    $self->append_plugin_method( "invert_image" );
+    $self->append_plugin_method( "ImageInverter" );
 };
-
-1;
 
 1;
 __END__
@@ -40,15 +38,34 @@ __END__
 
 =head1 NAME
 
-HTTP::Proxy::InterceptorX::Plugin::ImageInverter - Blah blah blah
+HTTP::Proxy::InterceptorX::Plugin::ImageInverter - Inverts every image on the page
 
 =head1 SYNOPSIS
 
-  use HTTP::Proxy::InterceptorX::Plugin::ImageInverter;
+    package My::Custom::Proxy;
+    use Moose;
+    extends qw/HTTP::Proxy::Interceptor/;
+    with qw/
+      HTTP::Proxy::InterceptorX::Plugin::ImageInverter
+    /;
+     
+    1;
+
+    my $p = My::Custom::Proxy->new(
+      config_path => 'teste_config.pl', #dont really need this for this plugin
+      port        => 9919,
+    );
+
+    $p->start ;
+    1;
 
 =head1 DESCRIPTION
 
-HTTP::Proxy::InterceptorX::Plugin::ImageInverter is
+HTTP::Proxy::InterceptorX::Plugin::ImageInverter is mainly a proof of concept that will invert every image on every site you access using this proxy.
+
+=head1 CONFIG
+
+Doesnt need a config file since it will invert all the images if finds.
 
 =head1 AUTHOR
 

@@ -48,7 +48,7 @@ my $image_original = read_file( file( qw/t google_logo.jpeg/ ) );
 is( $res_proxy->{ content } , $image_original->gif() , "Content was inverted with success" );
 
 #depois dos testes..
-kill 'HUP', $pid, $pid_server;
+kill 'KILL', $pid, $pid_server;
 
 sub fork_proxy {
     my $proxy = shift;
